@@ -7,7 +7,7 @@
 # TODO: Manage selection
 #
 # Shell: POSIX compliant
-# Author: Todd Yamakawa
+# Author: Guillerme Duvillié (based on Todd Yamakawa bookmarks plugin)
 
 if [ -z "$BOOKMARKS_DIR" ]; then
     BOOKMARKS_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/nnn/bookmarks"
