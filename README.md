@@ -13,3 +13,11 @@ The plugin only works with current file (no selection)
 ### Todo
 
 Manage selection
+
+## xdg-default
+
+Allows the user to change the default application used to open given file.
+
+### Dependencies
+
+The plugin requires fzf to work properly

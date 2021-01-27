@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+
+# Description: A small plugin that allows the user to quickly identify
+# the default xdg application to open the current filetype and change it 
+# if needed. 
+#
+# Dependencies: Use fzf to show possible replacements
+#
+# Shell: sh
+# Author: Guillerme Duvillié
+
+APP_DIR="${APP_DIR:-/usr/share/applications}"
+
+file_ft="$(xdg-mime query filetype "$1")"
+current_app="$(xdg-mime query default "$file_ft")"
+
+printf "%s" "$current_app is default application for type $file_ft. Change it ? (y)es/(n)o [default=n] "
+read -r ans
+
+get_app() {
+    for application in "${APP_DIR}"/*; do
+
+        # Only takes regular files into consideration
+        #[ -f "$application" ] || continue
+
+        printf "%40s\n" "$(basename -s ".desktop" "${application}")"
+    done | fzf | tr -d "[:blank:]"
+}
+
+if [ "$ans" == "y" ]; then
+    new_app="$(get_app)"
+    xdg-mime default "${new_app}.desktop" "${file_ft}"
+fi
