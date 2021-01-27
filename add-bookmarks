@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+
+# Description: Add a symlink in the bookmark directory
+#
+# The script creates the bookmark directory if it does not exists
+# 
+# TODO: Manage selection
+#
+# Shell: POSIX compliant
+# Author: Todd Yamakawa
+
+if [ -z "$BOOKMARKS_DIR" ]; then
+    BOOKMARKS_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/nnn/bookmarks"
+fi
+
+if [ ! -e "$BOOKMARKS_DIR" ]; then
+    mkdir "$BOOKMARKS_DIR"
+elif [ ! -d "$BOOKMARKS_DIR" ]; then
+    echo "$BOOKMARKS_DIR exists but is not a directory" | ${PAGER:-less}
+    exit 2
+fi
+
+# Check if NNN_PIPE is set
+if [ -z "$NNN_PIPE" ]; then
+    echo 'ERROR: NNN_PIPE is not set' | ${PAGER:-less}
+    exit 2
+fi
+
+printf "Bookmark name [default=file name] "
+read -r link_name
+
+if [ -z "$link_name" ]; then
+    link_name="$1"
+fi
+
+if [ -e "${BOOKMARKS_DIR}/${link_name}" ]; then
+    echo "${BOOKMARKS_DIR}/${link_name} already exists" | ${PAGER:-less}
+    exit 2
+fi
+
+ln -s "$(pwd)/$1" "${BOOKMARKS_DIR}/${link_name}"
